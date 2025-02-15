@@ -11,7 +11,17 @@ public class menu : MonoBehaviour
 
     public void StartGame() 
     {
-        SceneManager.LoadScene(1);
+        if (PlayerPrefs.HasKey("CurrentLevel"))
+        {
+            SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
+        }
+        else
+        {
+            PlayerPrefs.SetInt("CurrentLevel", 1);
+            PlayerPrefs.Save();
+            SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
+        }
+        
     }
 
     public void ReturnMainMenu()
@@ -34,6 +44,12 @@ public class menu : MonoBehaviour
     {
         SceneManager.LoadScene(i);
     }
+
+    public void ResetProgress() 
+    {
+        PlayerPrefs.DeleteAll();
+    }
+
 
 
 

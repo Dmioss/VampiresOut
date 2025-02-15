@@ -9,13 +9,16 @@ public class ObjecsToFind : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _levelManager = FindObjectOfType<LevelManager>();
+        _levelManager = FindObjectOfType<LevelManager>();    
+        _levelManager.AddItemToFind();
+
     }
 
     private void OnMouseDown()
     {
         _levelManager.ItemsFound();
-        gameObject.SetActive(false); // Скрываем объект        
+        Destroy(gameObject);
+        //gameObject.SetActive(false); // Скрываем объект        
     }
 
 }

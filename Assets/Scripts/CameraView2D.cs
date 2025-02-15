@@ -10,7 +10,7 @@ public class Camera2D : MonoBehaviour
     public float _panMinX, _panMinY;
     public float _panMaxX, _panMaxY;
 
-    public float zoomMax;
+    public float zoomMax = 10f;
     public float zoomMin = 2.5f;
 
     // Start is called before the first frame update
@@ -60,7 +60,25 @@ public class Camera2D : MonoBehaviour
 
     private void Zoom(float increment)
     {
-        _camera.orthographicSize = Mathf.Clamp(_camera.orthographicSize - increment, zoomMin, zoomMax);
+        //  _camera.orthographicSize = Mathf.Clamp(_camera.orthographicSize - increment*4, zoomMin, zoomMax);
+                
+        if (increment != 0.0f)
+        {
+            float newSize = _camera.orthographicSize - increment * 4; 
+            newSize = Mathf.Clamp(newSize, zoomMin, zoomMax);
+
+            float imageWidth = backgroundSprite.bounds.size.x;
+            float imageHeight = backgroundSprite.bounds.size.y;
+
+            float cameraHeight = newSize * 2;
+            float cameraWidth = cameraHeight * _camera.aspect;
+
+            if (cameraWidth <= imageWidth && cameraHeight <= imageHeight)
+            {
+                _camera.orthographicSize = newSize;
+            }
+        }
+
         _camera.transform.position = ClampCamera(_camera.transform.position);
 
     }

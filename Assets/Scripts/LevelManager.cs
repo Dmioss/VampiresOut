@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
-    [SerializeField] public int maxItems;
+    public int maxItems = 0;
     private int foundItems = 0;
 
     [SerializeField] public TMP_Text CountLabel;
@@ -18,7 +18,6 @@ public class LevelManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
         UpdateObjectCounter();
     }
 
@@ -26,6 +25,11 @@ public class LevelManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void AddItemToFind() {
+        maxItems++;
+        UpdateObjectCounter();
     }
 
     public void ItemsFound()
@@ -57,4 +61,16 @@ public class LevelManager : MonoBehaviour
         UI_canvas.SetActive(true);
         win_screen.SetActive(false);
     }
+
+    public void Continue()
+    {
+        int CurrentLevel = PlayerPrefs.GetInt("CurrentLevel");
+        CurrentLevel++;
+        PlayerPrefs.SetInt("CurrentLevel", CurrentLevel);
+        PlayerPrefs.Save();
+        SceneManager.LoadScene(CurrentLevel);
+    }
+
+
+
 }
