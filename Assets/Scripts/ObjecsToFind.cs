@@ -16,8 +16,11 @@ public class ObjecsToFind : MonoBehaviour
 
     private void OnMouseDown()
     {
-        _levelManager.ItemsFound();
-        Destroy(gameObject);
+        if (LevelManager.InGame) {
+            _levelManager.ItemsFound();
+            Destroy(gameObject);
+        }
+        
         //gameObject.SetActive(false); // Скрываем объект        
     }
 

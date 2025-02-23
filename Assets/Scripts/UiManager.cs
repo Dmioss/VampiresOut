@@ -9,19 +9,28 @@ public class menu : MonoBehaviour
     [SerializeField] public GameObject Menu_canvas;
     [SerializeField] public GameObject Level_canvas;
 
+    [SerializeField] public Animator BatLeftAnimator;
+    [SerializeField] public Animator BatRightAnimator;
+
+    public static int SceneToLoad;
+
     public void StartGame() 
     {
-        if (PlayerPrefs.HasKey("CurrentLevel"))
-        {
-            SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
-        }
-        else
-        {
+        if (!PlayerPrefs.HasKey("CurrentLevel"))
+        {         
             PlayerPrefs.SetInt("CurrentLevel", 1);
-            PlayerPrefs.Save();
-            SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
+            PlayerPrefs.Save();            
         }
+
+        SceneToLoad = PlayerPrefs.GetInt("CurrentLevel");
+
+        BatLeftAnimator.SetTrigger("Close_bat");
+        BatRightAnimator.SetTrigger("Close_bat");
+
         
+
+        // SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel"));
+
     }
 
     public void ReturnMainMenu()
@@ -49,7 +58,6 @@ public class menu : MonoBehaviour
     {
         PlayerPrefs.DeleteAll();
     }
-
 
 
 

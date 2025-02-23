@@ -8,23 +8,60 @@ public class LevelManager : MonoBehaviour
     public int maxItems = 0;
     private int foundItems = 0;
 
+    public Camera2D camera_script;
+
     [SerializeField] public TMP_Text CountLabel;
 
     [SerializeField] public GameObject UI_canvas;
-    [SerializeField] public GameObject welcome_screen        ;
+    [SerializeField] public GameObject welcome_screen;
     [SerializeField] public GameObject win_screen;
+    [SerializeField] public GameObject ObjToFind;
 
+    [SerializeField] public Animator BatLeftAnimator;
+    [SerializeField] public Animator BatRightAnimator;
+
+    [SerializeField] public GameObject[] NarrativeScenes;
+    private int currentNarrative = 0; // Индекс текущего наратива
+
+
+    public static int SceneToLoad;
+    public static bool InGame = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        UpdateObjectCounter();
+        UpdateObjectCounter(); 
+        InGame = false;
+        ShowNarrative(0); 
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    private void ShowNarrative(int index)
+    {
+        if ( index == (NarrativeScenes.Length - 1) )
+        {
+            InGame = true;
+        }
+        NarrativeScenes[index].SetActive(true);
+        
+    }
+        
+    private void HideNarrative(int index)
+    {
+        NarrativeScenes[index].SetActive(false);        
+    }
+
+    public void NextNarrative()
+    {
+        
+        HideNarrative(currentNarrative);        
+        currentNarrative++;               
+        ShowNarrative(currentNarrative);
     }
 
     public void AddItemToFind() {
@@ -52,14 +89,17 @@ public class LevelManager : MonoBehaviour
 
     public void ExitLevel() 
     {
-        SceneManager.LoadScene(0);
+        SceneToLoad = 0;
+
+        BatLeftAnimator.SetTrigger("Close_bat");
+        BatRightAnimator.SetTrigger("Close_bat");        
     }
 
     public void StartGameUI() 
     {
         welcome_screen.SetActive(false);
         UI_canvas.SetActive(true);
-        win_screen.SetActive(false);
+        
     }
 
     public void Continue()
@@ -68,7 +108,20 @@ public class LevelManager : MonoBehaviour
         CurrentLevel++;
         PlayerPrefs.SetInt("CurrentLevel", CurrentLevel);
         PlayerPrefs.Save();
-        SceneManager.LoadScene(CurrentLevel);
+        SceneToLoad = CurrentLevel;
+
+        BatLeftAnimator.SetTrigger("Close_bat");
+        BatRightAnimator.SetTrigger("Close_bat");
+    }
+
+    public void GetHint()
+    {
+        int childCount = ObjToFind.transform.childCount;
+        Transform HintObject = ObjToFind.transform.GetChild(0);
+
+        camera_script.SetTarget(HintObject);
+
+        Debug.Log(childCount);
     }
 
 

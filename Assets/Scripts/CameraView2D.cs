@@ -13,6 +13,12 @@ public class Camera2D : MonoBehaviour
     public float zoomMax = 10f;
     public float zoomMin = 2.5f;
 
+
+    public Transform target; // Целевая позиция (можно использовать Transform или Vector3)
+    public float smoothTime = 0.5f; // Время плавного перемещения
+    private Vector3 velocity = Vector3.zero; // Внутренняя переменная для SmoothDamp
+    public float arrivalThreshold = 0.1f; // Порог достижения цели
+
     // Start is called before the first frame update
     void Start()
     {
@@ -22,25 +28,44 @@ public class Camera2D : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        ZoomCamera();
-        PanCamera();
+        if (LevelManager.InGame) {
+            ZoomCamera();
+            PanCamera();
+        }
+
+        if (target != null)
+        {
+            // фиксируем Z
+            Vector3 targetPosition = new Vector3(target.position.x, target.position.y, _camera.transform.position.z);
+
+            // Плавное перемещение камеры к целевой позиции
+            _camera.transform.position = Vector3.SmoothDamp(_camera.transform.position, targetPosition, ref velocity, smoothTime);
+            
+            if (Vector3.Distance(_camera.transform.position, target.position) < arrivalThreshold)
+            {
+                // Обнуляем target, так как цель достигнута
+                target = null;
+                Debug.Log("Цель достигнута, target обнулен.");
+            }
+        }
+
     }
 
     private void Awake()
-    {
-     
+    {     
         _camera = Camera.main;
         zoomMax = backgroundSprite.bounds.size.y / 2f;
+    }
 
-
+    public void SetTarget(Transform newTarget)
+    {        
+        target = newTarget;
 
     }
 
     private void ZoomCamera()    
-    {
-        
-        Zoom(Input.GetAxis("Mouse ScrollWheel"));
-        
+    {        
+        Zoom(Input.GetAxis("Mouse ScrollWheel"));        
     }
 
     private void PanCamera()
