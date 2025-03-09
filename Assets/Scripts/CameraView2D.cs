@@ -41,7 +41,7 @@ public class Camera2D : MonoBehaviour
             // Плавное перемещение камеры к целевой позиции
             _camera.transform.position = Vector3.SmoothDamp(_camera.transform.position, targetPosition, ref velocity, smoothTime);
             
-            if (Vector3.Distance(_camera.transform.position, target.position) < arrivalThreshold)
+            if (Vector3.Distance(_camera.transform.position, targetPosition) < arrivalThreshold)
             {
                 // Обнуляем target, так как цель достигнута
                 target = null;

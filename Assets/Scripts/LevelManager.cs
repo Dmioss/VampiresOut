@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static UnityEngine.GraphicsBuffer;
 
 
 public class LevelManager : MonoBehaviour
@@ -23,9 +24,11 @@ public class LevelManager : MonoBehaviour
     [SerializeField] public GameObject[] NarrativeScenes;
     private int currentNarrative = 0; // Индекс текущего наратива
 
-
     public static int SceneToLoad;
     public static bool InGame = false;
+
+    private GameObject currentCircle; // Текущий круг
+    public GameObject circlePrefab;
 
     // Start is called before the first frame update
     void Start()
@@ -118,8 +121,15 @@ public class LevelManager : MonoBehaviour
     {
         int childCount = ObjToFind.transform.childCount;
         Transform HintObject = ObjToFind.transform.GetChild(0);
-
         camera_script.SetTarget(HintObject);
+
+        // Vector3 circlePosition = new Vector3(HintObject.position.x, HintObject.position.y, 0);
+
+        currentCircle = Instantiate(circlePrefab, HintObject.position, Quaternion.identity);
+
+        currentCircle.transform.SetParent(HintObject.transform);
+
+        currentCircle.transform.localPosition = new Vector3(0, 0, -1f);
 
         Debug.Log(childCount);
     }
