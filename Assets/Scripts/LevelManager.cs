@@ -79,10 +79,27 @@ public class LevelManager : MonoBehaviour
 
         if (foundItems >= maxItems)
         {
+            // todo - зачитать победу
+            // todo - запустить анимацию сдвига
+
+
             UI_canvas.SetActive(false);
-            win_screen.SetActive(true);
+
+            int CurrentLevel = PlayerPrefs.GetInt("CurrentLevel");
+            CurrentLevel++;
+            PlayerPrefs.SetInt("CurrentLevel", CurrentLevel);
+            PlayerPrefs.Save();
+            SceneToLoad = CurrentLevel;
+
+            BatLeftAnimator.SetTrigger("Close_bat");
+            BatRightAnimator.SetTrigger("Close_bat");            
+            
             
         }
+    }
+
+    public void WinScreenActive() {
+        win_screen.SetActive(true);
     }
 
     private void UpdateObjectCounter()
@@ -107,14 +124,9 @@ public class LevelManager : MonoBehaviour
 
     public void Continue()
     {
-        int CurrentLevel = PlayerPrefs.GetInt("CurrentLevel");
-        CurrentLevel++;
-        PlayerPrefs.SetInt("CurrentLevel", CurrentLevel);
-        PlayerPrefs.Save();
-        SceneToLoad = CurrentLevel;
+        // Кнопка continue загружает следующий уровнень
+        SceneManager.LoadScene(SceneToLoad); // Загружаем сцену
 
-        BatLeftAnimator.SetTrigger("Close_bat");
-        BatRightAnimator.SetTrigger("Close_bat");
     }
 
     public void GetHint()
