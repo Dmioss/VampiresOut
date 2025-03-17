@@ -8,6 +8,7 @@ public class LevelManager : MonoBehaviour
 {
     public int maxItems = 0;
     private int foundItems = 0;
+    private int remainItems = 0;
 
     public Camera2D camera_script;
 
@@ -104,7 +105,8 @@ public class LevelManager : MonoBehaviour
 
     private void UpdateObjectCounter()
     {
-        CountLabel.text = $"{foundItems} / {maxItems}";
+        remainItems = maxItems - foundItems;
+        CountLabel.text = $"{remainItems}";
     }
 
     public void ExitLevel() 
@@ -146,6 +148,20 @@ public class LevelManager : MonoBehaviour
         Debug.Log(childCount);
     }
 
+    public void CompleteLevelButton() {
+        //  нопка завершает текущий уровень, не зависимо от количества найденых предметов
+        UI_canvas.SetActive(false);
+
+        int CurrentLevel = PlayerPrefs.GetInt("CurrentLevel");
+        CurrentLevel++;
+        PlayerPrefs.SetInt("CurrentLevel", CurrentLevel);
+        PlayerPrefs.Save();
+        SceneToLoad = CurrentLevel;
+
+        BatLeftAnimator.SetTrigger("Close_bat");
+        BatRightAnimator.SetTrigger("Close_bat");
+
+    }
 
 
 }
